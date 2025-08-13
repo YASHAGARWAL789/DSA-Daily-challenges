@@ -1,0 +1,68 @@
+ * Description:
+ * This program checks whether a given number is a Boston number or not.
+ * A Boston number is a composite number where the sum of its digits is equal
+ * to the sum of the digits of its prime factors (counted with multiplicity).
+ *
+ * Example:
+ * Input: 378
+ * Prime factors: 2, 3, 3, 3, 7
+ * Sum of digits of 378 = 3+7+8 = 18
+ * Sum of digits of prime factors = 2 + 3 + 3 + 3 + 7 = 18
+ * Output: 1 (Boston number)
+
+Code Part:-
+
+import java.util.*;
+
+public class BostonNumberChecker {
+
+    static int digitSum(long x) {
+        int sum = 0;
+        while (x != 0) {
+            sum += x % 10; // Add the last digit
+            x /= 10;       // Remove the last digit
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a number to check if it is a Boston number: ");
+        long n = sc.nextLong();
+        long original = n;
+
+        // Step 1: Sum of digits of the number
+        int sod = digitSum(n);
+
+        // Step 2: Sum of digits of prime factors
+        int primeDigitSum = 0;
+
+        // Handle factor 2 separately (smallest prime)
+        while (n % 2 == 0) {
+            primeDigitSum += 2; // Add 2 for each occurrence
+            n /= 2;             // Divide n by 2
+        }
+
+        // Handle odd prime factors from 3 upwards
+        for (int i = 3; i * i <= n; i += 2) {
+            while (n % i == 0) {
+                primeDigitSum += digitSum(i); // Add sum of digits of i
+                n /= i;                       // Divide n by i
+            }
+        }
+
+        // If remaining n is a prime number greater than 2
+        if (n > 1) {
+            primeDigitSum += digitSum(n);
+        }
+
+        // Step 3: Check if number is a Boston number
+        if (sod == primeDigitSum) {
+            System.out.println(original + " is a Boston number (Output: 1)");
+        } else {
+            System.out.println(original + " is NOT a Boston number (Output: 0)");
+        }
+
+        sc.close();
+    }
+}
